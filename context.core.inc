@@ -362,8 +362,10 @@ function context_node_condition(&$node, $op) {
  * Implementation of hook_form_alter().
  */
 function context_form_alter(&$form, $form_state, $form_id) {
-  if ($form['#id'] === 'node-form' && arg(0) != 'admin') { // Prevent this from firing on admin pages... damn form driven apis...
+  // Prevent this from firing on admin pages... damn form driven apis...
+  if ($form['#id'] === 'node-form' && arg(0) != 'admin') {
     context_node_condition($form['#node'], 'form');
+    $form['#validate'][] = 'context_form_alter_node_validate';
   }
   if ($form_id == 'system_modules') {
     context_invalidate_cache();
@@ -402,6 +404,16 @@ function content_taxonomy_form_vocabulary_submit($form, &$form_state) {
 
   // Update the settings:
   variable_set('context_taxonomy_vocabularies', $context_vocabularies);
+}
+
+/**
+ * Node form validation callback.
+ *
+ * Set context also on validate, otherwise forms that don't validate drop out
+ * of context.
+ */
+function context_form_alter_node_validate($form, &$form_state) {
+  context_node_condition($form['#node'], 'form');
 }
 
 /**
