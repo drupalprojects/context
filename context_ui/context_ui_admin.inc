@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 /**
  * Page callback for context_ui admin landing page.

@@ -1,4 +1,3 @@
-// $Id$
 
 if (typeof(Drupal) == "undefined" || !Drupal.context_prefix_admin) {
   Drupal.context_prefix_admin = {};

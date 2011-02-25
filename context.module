@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 define('CONTEXT_GET', 0);
 define('CONTEXT_SET', 1);

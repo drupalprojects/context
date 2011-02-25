@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 function context_prefix_install() {
   switch ($GLOBALS['db_type']) {

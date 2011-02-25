@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 define('CONTEXT_PREFIX_PATH', 0);
 define('CONTEXT_PREFIX_SUBDOMAIN', 1);

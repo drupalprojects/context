@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 function context_ui_install() {
   switch ($GLOBALS['db_type']) {
