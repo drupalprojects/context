@@ -1,4 +1,3 @@
-; $Id$
 name = Context Contrib
 description = "Provides integration with Context on behalf of the following contrib modules: Nodequeue, Views, CSS Injector."
 dependencies[] = context

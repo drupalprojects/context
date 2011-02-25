@@ -1,4 +1,3 @@
-// $Id$
 
 if (typeof(Drupal) == "undefined" || !Drupal.context_ui) {
   Drupal.context_ui = {};

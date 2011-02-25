@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 class ContextBlocksTestCase extends DrupalWebTestCase {
 

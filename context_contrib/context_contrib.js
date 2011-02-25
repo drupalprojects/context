@@ -1,4 +1,3 @@
-// $Id$
 
 /**
  * This behavior looks at the views checkboxes that are being selected and if all the displays on a single view are ticked, then tick that too. Likewise if they are all ticked, and one is then unticked, untick the all checkbox. Toggling the parent checkbox toggles the children too.

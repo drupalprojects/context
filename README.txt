@@ -1,4 +1,3 @@
-$Id$
 
 Context for Drupal 6.x
 
