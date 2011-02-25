@@ -1,4 +1,3 @@
-// $Id$
 context_ui DRUPAL-6--1
 ----------------------
 - #392944: Increasing weight range for blocks.

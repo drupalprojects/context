@@ -1,4 +1,3 @@
-$Id$
 
 context_ui for Drupal 6.x
 
