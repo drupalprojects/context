@@ -75,8 +75,8 @@ class BlockDeleteForm extends ConfirmFormBase {
    *   The form question. The page title will be set to this value.
    */
   public function getQuestion() {
-    return $this->t('Are you sure you want to remove the @label block?', [
-      '@label' => $this->block->getConfiguration()['label'],
+    return $this->t('Are you sure you want to remove the %label block?', [
+      '%label' => $this->block->getConfiguration()['label'],
     ]);
   }
 
@@ -125,8 +125,8 @@ class BlockDeleteForm extends ConfirmFormBase {
 
     // If this is not an AJAX request then redirect and show a message.
     if (!$this->getRequest()->isXmlHttpRequest()) {
-      drupal_set_message($this->t('The @label block has been removed.', [
-          '@label' => $configuration['label']]
+      drupal_set_message($this->t('The %label block has been removed.', [
+          '%label' => $configuration['label']]
       ));
 
       $form_state->setRedirectUrl($this->getCancelUrl());

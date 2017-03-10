@@ -57,8 +57,8 @@ class ReactionDeleteForm extends ConfirmFormBase implements ContainerInjectionIn
    *   The form question. The page title will be set to this value.
    */
   public function getQuestion() {
-    return $this->t('Are you sure you want to remove the @reaction reaction.', [
-      '@reaction' => $this->reaction->getPluginDefinition()['label'],
+    return $this->t('Are you sure you want to remove the %reaction reaction.', [
+      '%reaction' => $this->reaction->getPluginDefinition()['label'],
     ]);
   }
 
@@ -117,8 +117,8 @@ class ReactionDeleteForm extends ConfirmFormBase implements ContainerInjectionIn
 
     // If this is not an AJAX request then redirect and show a message.
     if (!$this->getRequest()->isXmlHttpRequest()) {
-      drupal_set_message($this->t('The @label context reaction has been removed.', [
-          '@label' => $definition['label']]
+      drupal_set_message($this->t('The %label context reaction has been removed.', [
+          '%label' => $definition['label']]
       ));
 
       $form_state->setRedirectUrl($this->getCancelUrl());

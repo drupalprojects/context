@@ -35,8 +35,8 @@ class ContextDeleteForm extends EntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function getQuestion() {
-    return $this->t('Are you sure you want to delete the @label context?', array(
-      '@label' => $this->entity->getLabel(),
+    return $this->t('Are you sure you want to delete the %label context?', array(
+      '%label' => $this->entity->getLabel(),
     ));
   }
 

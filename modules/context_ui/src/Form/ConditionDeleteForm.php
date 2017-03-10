@@ -63,8 +63,8 @@ class ConditionDeleteForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getQuestion() {
-    return $this->t('Are you sure you want to delete the @label condition?', [
-      '@label' => $this->condition->getPluginDefinition()['label'],
+    return $this->t('Are you sure you want to delete the %label condition?', [
+      '%label' => $this->condition->getPluginDefinition()['label'],
     ]);
   }
 
@@ -115,8 +115,8 @@ class ConditionDeleteForm extends ConfirmFormBase {
 
     // If this is not an AJAX request then redirect and show a message.
     if (!$this->getRequest()->isXmlHttpRequest()) {
-      drupal_set_message($this->t('The condition @name has been removed.', [
-          '@name' => $this->condition->getPluginDefinition()['label']]
+      drupal_set_message($this->t('The condition %name has been removed.', [
+          '%name' => $this->condition->getPluginDefinition()['label']]
       ));
 
       $form_state->setRedirectUrl($this->getCancelUrl());
