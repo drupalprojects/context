@@ -1,6 +1,6 @@
 <?php
 
-use Drupal\Core\Form\FormStateInterface;
+use Drupal\Component\Utility\NestedArray;
 
 /**
  * Run the body class context reactions if there are any and let them add
@@ -9,5 +9,10 @@ use Drupal\Core\Form\FormStateInterface;
  * Implements hook_preprocess_HOOK().
  */
 function context_preprocess_html(&$variables) {
- // @todo Implement code!
+  /** @var \Drupal\context\ContextManager $context_manager */
+  $context_manager = \Drupal::service('context.manager');
+
+  foreach ($context_manager->getActiveReactions('body_class') as $reaction) {
+    $variables['attributes'] = NestedArray::mergeDeep($variables['attributes'], $reaction->execute());
+  }
 }
