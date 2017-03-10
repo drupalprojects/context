@@ -10,3 +10,7 @@ services:
     arguments: ['@context.manager']
     tags:
       - { name: event_subscriber }
+  theme.negotiator.context_themeswitcher:
+    class: Drupal\context\Theme\ThemeSwitcherNegotiator
+    tags:
+      - { name: theme_negotiator, priority: 1000 }
