@@ -208,6 +208,12 @@ abstract class BlockFormBase extends FormBase {
       '#value' => $theme,
     ];
 
+    $form['css_class'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Block Class'),
+      '#default_value' => isset($configuration['css_class']) ? $configuration['css_class'] : '',
+    ];
+    
     $form['actions']['submit'] = [
       '#type' => 'submit',
       '#value' => $this->getSubmitValue(),
@@ -246,6 +252,7 @@ abstract class BlockFormBase extends FormBase {
     $configuration = array_merge($this->block->getConfiguration(), [
       'region' => $form_state->getValue('region'),
       'theme' => $form_state->getValue('theme'),
+      'css_class' => $form_state->getValue('css_class'),
       'unique' => $form_state->getValue('unique'),
     ]);
 

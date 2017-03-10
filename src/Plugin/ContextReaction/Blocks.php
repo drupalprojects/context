@@ -191,7 +191,9 @@ class Blocks extends ContextReactionPluginBase implements ContainerFactoryPlugin
         // @see template_preprocess_block().
         $blockBuild = [
           '#theme' => 'block',
-          '#attributes' => [],
+          '#attributes' => [
+            'class' => [$block->getConfiguration()['css_class']]
+          ],
           '#configuration' => $configuration,
           '#plugin_id' => $block->getPluginId(),
           '#base_plugin_id' => $block->getBaseId(),
