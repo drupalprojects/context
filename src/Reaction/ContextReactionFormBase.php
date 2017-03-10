@@ -51,7 +51,7 @@ abstract class ContextReactionFormBase extends FormBase {
 
     $form['actions']['submit'] = [
       '#type' => 'submit',
-      '#value' => $this->t('Submit'),
+      '#value' => $this->t('Save'),
       '#button_type' => 'primary',
     ];
 
