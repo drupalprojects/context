@@ -170,6 +170,9 @@ abstract class BlockFormBase extends FormBase {
     // otherwise use the default theme.
     $theme = $this->getRequest()->query->get('theme', $this->themeHandler->getDefault());
 
+    // Some blocks require the theme name in the form state like Site Branding
+    $form_state->set('block_theme', $theme);
+    
     // Some blocks require contexts, set a temporary value with gathered
     // contextual values.
     $form_state->setTemporaryValue('gathered_contexts', $this->contextRepository->getAvailableContexts());
