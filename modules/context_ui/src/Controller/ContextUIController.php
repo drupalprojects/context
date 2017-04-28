@@ -276,7 +276,7 @@ class ContextUIController extends ControllerBase {
   public function addReaction(Request $request, ContextInterface $context, $reaction_id) {
 
     if ($context->hasReaction($reaction_id)) {
-      throw new HttpException(403, 'The specified condition had already been added to the context.');
+      throw new HttpException(403, 'The specified reaction had already been added to the context.');
     }
 
     // Create an instance of the reaction and add it to the context.
