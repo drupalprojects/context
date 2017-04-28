@@ -3,6 +3,7 @@
 namespace Drupal\context;
 
 use Drupal\context\Entity\Context;
+use Drupal\context\Plugin\ContextReaction\Blocks;
 use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityFormBuilderInterface;
@@ -13,6 +14,7 @@ use Drupal\Core\Condition\ConditionAccessResolverTrait;
 use Drupal\Core\Plugin\Context\ContextHandlerInterface;
 use Drupal\Core\Plugin\Context\ContextRepositoryInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Core\Theme\ThemeManagerInterface;
 
 /**
  * This is the manager service for the context module and should not be
@@ -63,6 +65,11 @@ class ContextManager {
   private $entityFormBuilder;
 
   /**
+   * @var \Drupal\Core\Theme\ThemeManagerInterface;
+   */
+  protected $themeManager;
+
+  /**
    * Construct.
    *
    * @param QueryFactory $entityQuery
@@ -77,6 +84,9 @@ class ContextManager {
    * @param ContextHandlerInterface $contextHandler
    *   The Drupal context handler service.
    *
+   * @param ThemeManagerInterface $themeManager
+   *   The Drupal theme manager service.
+   *
    * @param \Drupal\Core\Entity\EntityFormBuilderInterface $entityFormBuilder
    */
   function __construct(
@@ -84,7 +94,8 @@ class ContextManager {
     EntityManagerInterface $entityManager,
     ContextRepositoryInterface $contextRepository,
     ContextHandlerInterface $contextHandler,
-    EntityFormBuilderInterface $entityFormBuilder
+    EntityFormBuilderInterface $entityFormBuilder,
+    ThemeManagerInterface $themeManager
   )
   {
     $this->entityQuery = $entityQuery;
@@ -92,6 +103,7 @@ class ContextManager {
     $this->contextRepository = $contextRepository;
     $this->contextHandler = $contextHandler;
     $this->entityFormBuilder = $entityFormBuilder;
+    $this->themeManager = $themeManager;
   }
 
   /**
@@ -209,7 +221,20 @@ class ContextManager {
       // continue to the next context.
       if (is_null($reactionType)) {
         foreach ($context->getReactions() as $reaction) {
-          $reactions[] = $reaction;
+          // Only return block reaction if there is a block applied to the current theme.
+          if ($reaction instanceof Blocks) {
+            $blocks = $reaction->getBlocks();
+            $current_theme = $this->getCurrentTheme();
+            foreach ($blocks as $block) {
+              if ($block->getConfiguration()['theme'] == $current_theme) {
+                $reactions[] = $reaction;
+                break;
+              }
+            }
+          }
+          else {
+            $reactions[] = $reaction;
+          }
         }
         continue;
       }
@@ -318,6 +343,16 @@ class ContextManager {
     }
 
     return ($a->getWeight() < $b->getWeight()) ? -1 : 1;
+  }
+
+  /**
+   * Get current active theme.
+   *
+   * @return string
+   *   Current active theme name.
+   */
+  private function getCurrentTheme() {
+    return $this->themeManager->getActiveTheme()->getName();
   }
 
 }
