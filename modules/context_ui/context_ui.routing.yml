@@ -16,15 +16,6 @@ entity.context.add_form:
   requirements:
     _permission: 'administer contexts'
 
-# Page to edit a context.
-entity.context.edit_form:
-  path: '/admin/structure/context/{context}'
-  defaults:
-    _entity_form: 'context.edit'
-    _title: 'Edit context'
-  requirements:
-    _permission: 'administer contexts'
-
 # Page to remove a context.
 entity.context.delete_form:
   path: '/admin/structure/context/{context}/delete'
