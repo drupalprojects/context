@@ -152,7 +152,7 @@ class ContextUIController extends ControllerBase {
         'condition' => [
           'data' => [
             '#type' => 'link',
-            '#title' => $condition['label'],
+            '#title' => $condition['label'] . ' (' . $condition['provider'] . ')',
             '#url' => Url::fromRoute('context.condition_add', [
               'context' => $context->id(),
               'condition_id' => $condition_id,
