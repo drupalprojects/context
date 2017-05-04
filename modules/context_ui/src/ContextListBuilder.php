@@ -166,6 +166,11 @@ class ContextListBuilder extends ConfigEntityListBuilder implements FormInterfac
             'url' => $context->urlInfo('delete-form'),
             'attributes' => $this->getAjaxAttributes(),
           ],
+          'disable' => [
+            'title' => $context->disabled() ? $this->t('Enable') : $this->t('Disable'),
+            'url' => $context->toUrl('disable-form'),
+            'attributes' => $this->getAjaxAttributes(),
+          ]
         ];
 
         $form['contexts'][$context_id] = [
@@ -174,6 +179,7 @@ class ContextListBuilder extends ConfigEntityListBuilder implements FormInterfac
           ],
           'label' => [
             '#markup' => $context->getLabel(),
+            '#wrapper_attributes' => $context->disabled() ? ['style' => 'opacity:0.6'] : NULL,
           ],
           'description' => [
             '#markup' => $context->getDescription(),

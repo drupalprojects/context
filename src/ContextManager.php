@@ -196,7 +196,7 @@ class ContextManager {
 
     /** @var \Drupal\context\ContextInterface $context */
     foreach ($this->getContexts() as $context) {
-      if ($this->evaluateContextConditions($context)) {
+      if ($this->evaluateContextConditions($context) && !$context->disabled()) {
         $this->activeContexts[] = $context;
       }
     }

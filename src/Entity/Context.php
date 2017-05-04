@@ -22,11 +22,13 @@ use Drupal\context\Plugin\ContextReactionPluginCollection;
  *       "add" = "Drupal\context_ui\Form\ContextAddForm",
  *       "edit" = "Drupal\context_ui\Form\ContextEditForm",
  *       "delete" = "Drupal\context_ui\Form\ContextDeleteForm",
+ *       "disable" = "Drupal\context_ui\Form\ContextDisableForm",
  *     }
  *   },
  *   links = {
  *     "edit-form" = "/admin/structure/context/{context}",
  *     "delete-form" = "/admin/structure/context/{context}/delete",
+ *     "disable-form" = "/admin/structure/context/{context}/disable",
  *     "collection" = "/admin/structure/context",
  *   },
  *   admin_permission = "administer contexts",
@@ -355,5 +357,20 @@ class Context extends ConfigEntityBase implements ContextInterface {
       'reactions' => $this->getReactions(),
       'conditions' => $this->getConditions(),
     ];
+  }
+
+  /**
+   * Disable context.
+   */
+  public function disable() {
+    $this->disabled = !$this->disabled();
+    $this->save();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function disabled() {
+    return $this->disabled;
   }
 }

@@ -25,6 +25,15 @@ entity.context.delete_form:
   requirements:
     _permission: 'administer contexts'
 
+# Page to disable a context.
+entity.context.disable_form:
+  path: '/admin/structure/context/{context}/disable'
+  defaults:
+    _entity_form: 'context.disable'
+    _title: 'Disable context'
+  requirements:
+    _permission: 'administer contexts'
+
 # Route to get autocomplete results for context groups.
 context.groups.autocomplete:
   path: '/admin/structure/context/groups/autocomplete'
