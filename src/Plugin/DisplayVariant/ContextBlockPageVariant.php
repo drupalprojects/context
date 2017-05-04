@@ -5,6 +5,7 @@ namespace Drupal\context\Plugin\DisplayVariant;
 use Drupal\context\ContextManager;
 use Drupal\Core\Display\VariantBase;
 use Drupal\Core\Display\PageVariantInterface;
+use Drupal\Core\Display\VariantManager;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -112,7 +113,23 @@ class ContextBlockPageVariant extends VariantBase implements PageVariantInterfac
       $build = $reaction->execute($build, $this->title, $this->mainContent);
     }
 
+    // Execute each block reaction and check if default block should be included in page build.
+    foreach ($this->contextManager->getActiveReactions('blocks') as $reaction) {
+      if ($reaction->includeDefaultBlocks()) {
+        $build = array_merge($this->getBuildFromBlockLayout(), $build);
+        return $build;
+      }
+    }
     return $build;
+  }
+
+  /**
+   * Get build from Block layout.
+   */
+  private function getBuildFromBlockLayout() {
+    $plugin_manager = \Drupal::service('plugin.manager.display_variant');
+    $display_variant = $plugin_manager->createInstance('block_page', $plugin_manager->getDefinition('block_page'));
+    return $display_variant->build();
   }
 
 }
