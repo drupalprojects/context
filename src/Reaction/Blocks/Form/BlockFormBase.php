@@ -7,6 +7,7 @@ use Drupal\context\ContextReactionManager;
 use Drupal\context\Form\AjaxFormTrait;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\CloseModalDialogCommand;
+use Drupal\Core\Ajax\RemoveCommand;
 use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\Form\FormBase;
@@ -17,6 +18,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Core\Plugin\Context\ContextRepositoryInterface;
 use Drupal\Core\Plugin\ContextAwarePluginInterface;
+use Drupal\Core\Render\Element\StatusMessages;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -275,13 +277,24 @@ abstract class BlockFormBase extends FormBase {
    *
    * @return AjaxResponse
    */
-  public function submitFormAjax() {
-    $form = $this->contextManager->getForm($this->context, 'edit');
-
+  public function submitFormAjax(array &$form, FormStateInterface $form_state) {
     $response = new AjaxResponse();
 
-    $response->addCommand(new CloseModalDialogCommand());
-    $response->addCommand(new ReplaceCommand('#context-reactions', $form['reactions']));
+    if ($form_state->getErrors()) {
+      $messages = StatusMessages::renderMessages(NULL);
+      $output[] = $messages;
+      $output[] = $form;
+      $form_class = '.' . str_replace('_', '-', $form_state->getFormObject()->getFormId()) ;
+      // Remove any previously added error messages.
+      $response->addCommand(new RemoveCommand('#drupal-modal .messages--error'));
+      // Replace old form with new one and with error message.
+      $response->addCommand(new ReplaceCommand($form_class, $output));
+    }
+    else {
+      $form = $this->contextManager->getForm($this->context, 'edit');
+      $response->addCommand(new CloseModalDialogCommand());
+      $response->addCommand(new ReplaceCommand('#context-reactions', $form['reactions']));
+    }
 
     return $response;
   }
