@@ -208,6 +208,21 @@ class Blocks extends ContextReactionPluginBase implements ContainerFactoryPlugin
           ],
         ];
 
+        // Add contextual links to block.
+        $content = $block->build();
+        if (isset($content['#contextual_links'])) {
+          $blockBuild['#contextual_links'] = $content['#contextual_links'];
+        }
+
+        // Add additional contextual link, for editing block configuration.
+        $blockBuild['#contextual_links']['context_block'] = [
+          'route_parameters' => [
+            'context' => $configuration['context_id'],
+            'reaction_id' => 'blocks',
+            'block_id' => $block->getConfiguration()['uuid'],
+          ],
+        ];
+
         if (array_key_exists('weight', $configuration)) {
           $blockBuild['#weight'] = $configuration['weight'];
         }

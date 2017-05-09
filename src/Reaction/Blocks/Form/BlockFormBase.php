@@ -22,6 +22,7 @@ use Drupal\Core\Render\Element\StatusMessages;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 abstract class BlockFormBase extends FormBase {
 
@@ -81,6 +82,11 @@ abstract class BlockFormBase extends FormBase {
   protected $contextManager;
 
   /**
+   * @var \Symfony\Component\HttpFoundation\Request
+   */
+  protected $request;
+
+  /**
    * Constructs a new VariantPluginFormBase.
    *
    * @param \Drupal\Component\Plugin\PluginManagerInterface $block_manager
@@ -92,6 +98,7 @@ abstract class BlockFormBase extends FormBase {
    * @param \Drupal\Core\Form\FormBuilderInterface $formBuilder
    * @param \Drupal\context\ContextReactionManager $contextReactionManager
    * @param \Drupal\context\ContextManager $contextManager
+   * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
    */
   public function __construct(
     PluginManagerInterface $block_manager,
@@ -99,7 +106,8 @@ abstract class BlockFormBase extends FormBase {
     ThemeHandlerInterface $themeHandler,
     FormBuilderInterface $formBuilder,
     ContextReactionManager $contextReactionManager,
-    ContextManager $contextManager
+    ContextManager $contextManager,
+    RequestStack $requestStack
   )
   {
     $this->blockManager = $block_manager;
@@ -108,6 +116,7 @@ abstract class BlockFormBase extends FormBase {
     $this->formBuilder = $formBuilder;
     $this->contextReactionManager = $contextReactionManager;
     $this->contextManager = $contextManager;
+    $this->request = $requestStack->getCurrentRequest();
   }
 
   /**
@@ -120,7 +129,8 @@ abstract class BlockFormBase extends FormBase {
       $container->get('theme_handler'),
       $container->get('form_builder'),
       $container->get('plugin.manager.context_reaction'),
-      $container->get('context.manager')
+      $container->get('context.manager'),
+      $container->get('request_stack')
     );
   }
 
@@ -225,6 +235,11 @@ abstract class BlockFormBase extends FormBase {
       ],
     ];
 
+    // Remove ajax from submit, if this is not ajax request.
+    if (!$this->request->isXmlHttpRequest()) {
+      unset($form['actions']['submit']['#ajax']);
+    }
+
     return $form;
   }
 
@@ -256,6 +271,7 @@ abstract class BlockFormBase extends FormBase {
       'theme' => $form_state->getValue('theme'),
       'css_class' => $form_state->getValue('css_class'),
       'unique' => $form_state->getValue('unique'),
+      'context_id' => $this->context->id(),
     ]);
 
     // Add/Update the block.
