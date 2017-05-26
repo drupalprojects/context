@@ -40,3 +40,14 @@ function context_preprocess_html(&$variables) {
     $variables['attributes'] = NestedArray::mergeDeep($variables['attributes'], $reaction->execute());
   }
 }
+
+/**
+ * Implements hook_theme_suggestions_page_alter().
+ */
+function context_theme_suggestions_page_alter(array &$suggestions, array $variables) {
+  $context_manager = \Drupal::service('context.manager');
+  foreach ($context_manager->getActiveReactions('page_template_suggestions') as $reaction) {
+    $template_suggestions = explode(PHP_EOL, $reaction->execute());
+    $suggestions = array_merge($suggestions, $template_suggestions);
+  }
+}
