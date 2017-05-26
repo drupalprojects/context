@@ -116,9 +116,14 @@ class ContextManager {
       ->get('context')
       ->execute();
 
-    return $this->entityManager
+    $contexts = $this->entityManager
       ->getStorage('context')
       ->loadMultiple($contextIds);
+
+    // Sort the contexts by their weight.
+    uasort($contexts, [$this, 'sortContextsByWeight']);
+
+    return $contexts;
   }
 
   /**
@@ -131,9 +136,6 @@ class ContextManager {
     $contexts = $this->getContexts();
 
     $groups = [];
-
-    // Sort the contexts by their weight before grouping them.
-    uasort($contexts, [$this, 'sortContextsByWeight']);
 
     // Add each context to their respective groups.
     foreach ($contexts as $context_id => $context) {
