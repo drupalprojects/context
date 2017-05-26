@@ -116,7 +116,7 @@ class ContextBlockPageVariant extends VariantBase implements PageVariantInterfac
     // Execute each block reaction and check if default block should be included in page build.
     foreach ($this->contextManager->getActiveReactions('blocks') as $reaction) {
       if ($reaction->includeDefaultBlocks()) {
-        $build = array_merge($this->getBuildFromBlockLayout(), $build);
+        $build = array_merge_recursive($this->getBuildFromBlockLayout(), $build);
         return $build;
       }
     }
