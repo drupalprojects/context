@@ -2,6 +2,7 @@
 
 namespace Drupal\context_ui\Controller;
 
+use Drupal\Core\Ajax\OpenModalDialogCommand;
 use Drupal\Core\Url;
 use Drupal\Component\Utility\Html;
 use Drupal\context\ContextManager;
@@ -287,6 +288,23 @@ class ContextUIController extends ControllerBase {
       throw new HttpException(400, $e->getMessage());
     }
 
+    // If one of the condition is "Current theme", prevent adding Theme reaction.
+    // Else this will cause an infinite loop when checking for active contexts.
+    if ($reaction_id == 'theme') {
+      $conditions = $context->getConditions();
+      foreach ($conditions as $condition) {
+        if ($condition->getPluginId() == 'current_theme') {
+          if ($request->isXmlHttpRequest()) {
+            $response = new AjaxResponse();
+
+            $response->addCommand(new CloseModalDialogCommand());
+            $response->addCommand(new OpenModalDialogCommand($this->t("Theme reaction"), $this->t("You can not place Theme reaction if Current theme condition is set."), ['width' => '700']));
+            return $response;
+          }
+        }
+      }
+    }
+
     $context->addReaction($reaction->getConfiguration());
     $context->save();
 
@@ -334,6 +352,23 @@ class ContextUIController extends ControllerBase {
     }
     catch (PluginException $e) {
       throw new HttpException(400, $e->getMessage());
+    }
+
+    // Prevent adding "Current theme" condition, if "Theme" reaction is already set.
+    // Else this will cause an infinite loop when checking for active contexts.
+    if ($condition_id == 'current_theme') {
+      $reactions = $context->getReactions();
+      foreach ($reactions as $reaction) {
+        if ($reaction->getPluginId() == 'theme') {
+          if ($request->isXmlHttpRequest()) {
+            $response = new AjaxResponse();
+  
+            $response->addCommand(new CloseModalDialogCommand());
+            $response->addCommand(new OpenModalDialogCommand($this->t("Current theme condition"), $this->t("You can not set Current theme condition if Theme reaction is set."), ['width' => '700']));
+            return $response;
+          }
+        }
+      }
     }
 
     $context->addCondition($condition->getConfiguration());
