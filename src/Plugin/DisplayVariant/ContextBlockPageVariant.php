@@ -99,14 +99,9 @@ class ContextBlockPageVariant extends VariantBase implements PageVariantInterfac
       ],
     ];
 
-    // Place main content and messages blocks, these will be removed by the
-    // reactions if a message or content block has been manually placed.
+    // Place main content block, it will be removed by the reactions if a main
+    // content block has been manually placed.
     $build['content']['system_main'] = $this->mainContent;
-
-    $build['content']['messages'] = [
-      '#weight' => -1000,
-      '#type' => 'status_messages',
-    ];
 
     // Execute each block reaction and let them modify the page build.
     foreach ($this->contextManager->getActiveReactions('blocks') as $reaction) {
