@@ -184,7 +184,7 @@ abstract class BlockFormBase extends FormBase {
 
     // Some blocks require the theme name in the form state like Site Branding
     $form_state->set('block_theme', $theme);
-    
+
     // Some blocks require contexts, set a temporary value with gathered
     // contextual values.
     $form_state->setTemporaryValue('gathered_contexts', $this->contextRepository->getAvailableContexts());
@@ -225,7 +225,7 @@ abstract class BlockFormBase extends FormBase {
       '#title' => $this->t('Block Class'),
       '#default_value' => isset($configuration['css_class']) ? $configuration['css_class'] : '',
     ];
-    
+
     $form['actions']['submit'] = [
       '#type' => 'submit',
       '#value' => $this->getSubmitValue(),
@@ -239,6 +239,9 @@ abstract class BlockFormBase extends FormBase {
     if (!$this->request->isXmlHttpRequest()) {
       unset($form['actions']['submit']['#ajax']);
     }
+
+    // Disable cache on form to prevent ajax forms from failing.
+    $form_state->disableCache();
 
     return $form;
   }
