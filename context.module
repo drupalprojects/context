@@ -51,3 +51,25 @@ function context_theme_suggestions_page_alter(array &$suggestions, array $variab
     $suggestions = array_merge($suggestions, $template_suggestions);
   }
 }
+
+/**
+ * Implements hook_preprocess_page().
+ */
+function context_preprocess_page(&$variables) {
+  // Active theme for route.
+  $current_theme = \Drupal::service('theme.negotiator')->determineActiveTheme(Drupal::routeMatch());
+
+  // Context manager.
+  $context_manager = \Drupal::service('context.manager');
+
+  // Disable regions based on regions reaction.
+  foreach ($context_manager->getActiveReactions('regions') as $region_reaction) {
+    $configuration = $region_reaction->getConfiguration();
+    if (isset($configuration['regions'][$current_theme])) {
+      foreach ($configuration['regions'][$current_theme] as $region) {
+        unset($variables['page'][$region]);
+      }
+    }
+  }
+
+}
