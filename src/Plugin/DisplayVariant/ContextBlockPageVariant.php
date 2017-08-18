@@ -2,6 +2,7 @@
 
 namespace Drupal\context\Plugin\DisplayVariant;
 
+use Drupal\Component\Utility\NestedArray;
 use Drupal\context\ContextManager;
 use Drupal\Core\Display\VariantBase;
 use Drupal\Core\Display\PageVariantInterface;
@@ -111,7 +112,7 @@ class ContextBlockPageVariant extends VariantBase implements PageVariantInterfac
     // Execute each block reaction and check if default block should be included in page build.
     foreach ($this->contextManager->getActiveReactions('blocks') as $reaction) {
       if ($reaction->includeDefaultBlocks()) {
-        $build = array_merge_recursive($this->getBuildFromBlockLayout(), $build);
+        $build = NestedArray::mergeDeep($this->getBuildFromBlockLayout(), $build);
         return $build;
       }
     }
