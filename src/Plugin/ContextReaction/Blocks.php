@@ -229,6 +229,10 @@ class Blocks extends ContextReactionPluginBase implements ContainerFactoryPlugin
 
         $build[$region][$block_placement_key] = $blockBuild;
 
+        // After merging with blocks from Block layout, we want to sort all of
+        // them again.
+        $build[$region]['#sorted'] = FALSE;
+
         // The main content block cannot be cached: it is a placeholder for the
         // render array returned by the controller. It should be rendered as-is,
         // with other placed blocks "decorating" it. Analogous reasoning for the
