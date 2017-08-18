@@ -139,7 +139,7 @@ class Blocks extends ContextReactionPluginBase implements ContainerFactoryPlugin
    * @return array
    */
   public function execute(array $build = array(), $title = NULL, $main_content = NULL) {
-    
+
     $cacheability = CacheableMetadata::createFromRenderArray($build);
 
     // Use the currently active theme to fetch blocks.
@@ -201,7 +201,7 @@ class Blocks extends ContextReactionPluginBase implements ContainerFactoryPlugin
           '#block_plugin' => $block,
           '#pre_render' => [[$this, 'preRenderBlock']],
           '#cache' => [
-            'keys' => ['context_blocks_reaction', 'block', $block_placement_key, $block_placement_key],
+            'keys' => ['context_blocks_reaction', 'block', $block_placement_key],
             'tags' => $block->getCacheTags(),
             'contexts' => $block->getCacheContexts(),
             'max-age' => $block->getCacheMaxAge(),
