@@ -125,6 +125,8 @@ class ContextBlockPageVariant extends VariantBase implements PageVariantInterfac
   private function getBuildFromBlockLayout() {
     $plugin_manager = \Drupal::service('plugin.manager.display_variant');
     $display_variant = $plugin_manager->createInstance('block_page', $plugin_manager->getDefinition('block_page'));
+    $display_variant->setTitle($this->title);
+
     return $display_variant->build();
   }
 
