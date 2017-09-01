@@ -53,6 +53,23 @@ class ContextEditForm extends ContextFormBase {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function save(array $form, FormStateInterface $formState) {
+    $status = parent::save($form, $formState);
+
+    if ($status) {
+      drupal_set_message($this->t('The context %label has been saved.', [
+        '%label' => $this->entity->getLabel(),
+      ]));
+    }
+    else {
+      drupal_set_message($this->t('The context was not saved.'));
+    }
+
+  }
+
+  /**
    * Process function for the conditions.
    *
    * @param $element
@@ -204,4 +221,48 @@ class ContextEditForm extends ContextFormBase {
 
     return $element;
   }
+
+  /**
+   * Actions function.
+   *
+   * @param array $form
+   *   Form object.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   Form state object.
+   *
+   * @return mixed
+   *   Return mixed object.
+   */
+  protected function actions(array $form, FormStateInterface $form_state) {
+    $element = parent::actions($form, $form_state);
+
+    $element['submit'] = [
+      '#type' => 'submit',
+      '#dropbutton' => 'save',
+      '#value' => t('Save and continue'),
+      '#submit' => ['::submitForm', '::save'],
+    ];
+    $element['submit_exit'] = [
+      '#type' => 'submit',
+      '#dropbutton' => 'save',
+      '#value' => t('Save and exit'),
+      '#submit' => ['::submitForm', '::save', '::collection'],
+    ];
+
+    return $element;
+  }
+
+  /**
+   * Collection function makes redirection to route name.
+   *
+   * @param array $form
+   *   Form object.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   From state object.
+   */
+  public function collection(array $form, FormStateInterface $form_state) {
+    $form_state->setRedirect('entity.context.collection');
+
+  }
+
 }
