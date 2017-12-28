@@ -228,6 +228,11 @@ class Blocks extends ContextReactionPluginBase implements ContainerFactoryPlugin
           $blockBuild['#weight'] = $configuration['weight'];
         }
 
+        // Invoke block_view_alter().
+        // If an alter hook wants to modify the block contents, it can append
+        // another #pre_render hook.
+        \Drupal::moduleHandler()->alter(['block_view', 'block_view_' . $block->getBaseId()], $blockBuild, $block);
+
         $build[$region][$block_placement_key] = $blockBuild;
 
         // After merging with blocks from Block layout, we want to sort all of
