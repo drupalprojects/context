@@ -200,6 +200,17 @@ abstract class BlockFormBase extends FormBase {
       '#value' => $this->block->getPluginId(),
     ];
 
+    $form['custom_id'] = [
+      '#type' => 'machine_name',
+      '#maxlength' => 64,
+      '#description' => $this->t('A unique name for this block instance. Must be alpha-numeric and underscore separated.'),
+      '#default_value' => isset($configuration['custom_id']) ? $configuration['custom_id'] : preg_replace("/\W+/", "_", $this->block->getPluginId()),
+      '#machine_name' => [
+        'source' => ['settings', 'label'],
+      ],
+      '#required' => TRUE,
+    ];
+
     $form['region'] = [
       '#type' => 'select',
       '#title' => $this->t('Region'),
@@ -270,6 +281,7 @@ abstract class BlockFormBase extends FormBase {
     }
 
     $configuration = array_merge($this->block->getConfiguration(), [
+      'custom_id' => $form_state->getValue('custom_id'),
       'region' => $form_state->getValue('region'),
       'theme' => $form_state->getValue('theme'),
       'css_class' => $form_state->getValue('css_class'),
