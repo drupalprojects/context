@@ -7,4 +7,4 @@ configure: entity.context.collection
 
 # Module dependencies.
 dependencies:
-  - context
+  - context:context
