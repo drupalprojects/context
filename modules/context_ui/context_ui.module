@@ -1,0 +1,13 @@
+<?php
+
+function context_ui_context_insert($entity) {
+  Drupal::service('context_ui.menu_builder')->addSubMenuItem($entity);
+}
+
+function context_ui_context_update($entity) {
+  Drupal::service('context_ui.menu_builder')->updateSubMenuItem($entity);
+}
+
+function context_ui_context_delete($entity) {
+  Drupal::service('context_ui.menu_builder')->deleteSubMenuItem($entity);
+}
