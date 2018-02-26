@@ -1,32 +1,49 @@
 <?php
-/**
- * @file
- * Contains \Drupal\context\Theme\ThemeSwitcherNegotiator.
- */
 
 namespace Drupal\context\Theme;
 
+use Drupal\context\ContextManager;
 use Drupal\context\Plugin\ContextReaction\Theme;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Theme\ThemeNegotiatorInterface;
 
+/**
+ * Context Theme Switcher Negotiator.
+ */
 class ThemeSwitcherNegotiator implements ThemeNegotiatorInterface {
 
   /**
+   * ContextManager.
+   *
+   * @var \Drupal\context\ContextManager
+   */
+  private $contextManager;
+
+  /**
+   * Theme machine name.
+   *
    * @var string
    */
   protected $theme;
 
   /**
+   * Service constructor.
+   *
+   * @param \Drupal\context\ContextManager $contextManager
+   *   ContextManager.
+   */
+  public function __construct(ContextManager $contextManager) {
+    $this->contextManager = $contextManager;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function applies(RouteMatchInterface $route_match) {
-    $context_manager = \Drupal::service('context.manager');
-
     // If there is no Theme reaction set, do not try to get active reactions,
     // since this causes infinite loop.
     $theme_reaction = FALSE;
-    foreach ($context_manager->getContexts() as $context) {
+    foreach ($this->contextManager->getContexts() as $context) {
       foreach ($context->getReactions() as $reaction) {
         if ($reaction instanceof Theme) {
           $theme_reaction = TRUE;
@@ -36,7 +53,7 @@ class ThemeSwitcherNegotiator implements ThemeNegotiatorInterface {
     }
 
     if ($theme_reaction) {
-      foreach($context_manager->getActiveReactions('theme') as $theme_reaction) {
+      foreach ($this->contextManager->getActiveReactions('theme') as $theme_reaction) {
         $configuration = $theme_reaction->getConfiguration();
         $this->theme = $configuration['theme'];
         return TRUE;
@@ -52,4 +69,5 @@ class ThemeSwitcherNegotiator implements ThemeNegotiatorInterface {
   public function determineActiveTheme(RouteMatchInterface $route_match) {
     return $this->theme;
   }
+
 }
