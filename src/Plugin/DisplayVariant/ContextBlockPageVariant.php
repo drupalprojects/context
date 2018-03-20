@@ -43,6 +43,11 @@ class ContextBlockPageVariant extends VariantBase implements PageVariantInterfac
   protected $title = '';
 
   /**
+   * @var VariantManager
+   */
+  protected $displayVariant;
+
+  /**
    * Constructs a new ContextBlockPageVariant.
    *
    * @param array $configuration
@@ -56,10 +61,14 @@ class ContextBlockPageVariant extends VariantBase implements PageVariantInterfac
    *
    * @param ContextManager $contextManager
    *   The context module manager.
+   *
+   * @param VariantManager $displayVariant
+   *   The variant manager.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, ContextManager $contextManager) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, ContextManager $contextManager, VariantManager $displayVariant) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->contextManager = $contextManager;
+    $this->displayVariant = $displayVariant;
   }
 
   /**
@@ -70,7 +79,8 @@ class ContextBlockPageVariant extends VariantBase implements PageVariantInterfac
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('context.manager')
+      $container->get('context.manager'),
+      $container->get('plugin.manager.display_variant')
     );
   }
 
@@ -123,8 +133,7 @@ class ContextBlockPageVariant extends VariantBase implements PageVariantInterfac
    * Get build from Block layout.
    */
   private function getBuildFromBlockLayout() {
-    $plugin_manager = \Drupal::service('plugin.manager.display_variant');
-    $display_variant = $plugin_manager->createInstance('block_page', $plugin_manager->getDefinition('block_page'));
+    $display_variant = $this->displayVariant->createInstance('block_page', $this->displayVariant->getDefinition('block_page'));
     $display_variant->setTitle($this->title);
 
     return $display_variant->build();
